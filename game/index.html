@@ -1,0 +1,319 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>MONA'S EGG COLLECTION</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+    <style type="text/css">
+        h1 {text-align: center;}
+        canvas {
+    display : block;   
+    margin : auto;
+}
+
+        body {
+            margin: 0;
+            <h1>MONA'S EGG COLLECTION</h1>
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+var config = {
+    type: Phaser.AUTO,
+    width: 360,
+    height: 640,
+    autoCenter: true,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 700 },
+            debug: false
+        }
+    },
+    scene: {
+        preload: preload,
+        create: create,
+        update: update,
+    }
+};
+
+var player;
+var eggs;
+var badEggs;
+var platforms;
+var cursors;
+var score = 0;
+var gameOver = false;
+var scoreText;
+var lives = 3;
+var life_1, life_2, life_3;
+var droppedEggs = 0;
+
+
+var game = new Phaser.Game(config);
+
+function preload ()
+{
+    this.load.image('background', 'assets/background.png');
+    this.load.image('ground', 'assets/ground.png');
+    this.load.image('egg_1', 'assets/egg_1.png');
+    this.load.image('egg_2', 'assets/egg_2.png');
+    this.load.image('egg_3', 'assets/egg_3.png');
+    this.load.image('egg_4', 'assets/egg_4.png');
+    this.load.image('egg_5', 'assets/egg_5.png');
+    this.load.image('badEgg', 'assets/egg_6.png');
+    this.load.image('life', 'assets/life.png');
+    this.load.spritesheet('mona', 'assets/mona.png', { frameWidth: 81, frameHeight: 140 });
+}
+
+var timedEvent;
+var text;
+
+
+
+function create ()
+{
+    text = this.add.text(100, 100);
+
+
+    //  A simple background for our game
+    this.add.image(180, 320, 'background');
+
+    // lives
+    life_1 = this.add.image(270, 25, 'life');
+    life_2 = this.add.image(300, 25, 'life');
+    life_3 = this.add.image(330, 25, 'life');
+
+
+
+    //  The platforms group contains the ground and the 2 ledges we can jump on
+    platforms = this.physics.add.staticGroup();
+
+    //  Here we create the ground.
+    platforms.create(180, 606, 'ground').refreshBody();
+
+
+
+    // The player and its settings
+    player = this.physics.add.sprite(100, 500, 'mona');
+
+    //  Player physics properties. Give the little guy a slight bounce.
+    //player.setBounce(0.2);
+    player.setCollideWorldBounds(true);
+
+    //  Our player animations, turning, walking left and walking right.
+    this.anims.create({
+        key: 'left',
+        frames: this.anims.generateFrameNumbers('mona', { start: 0, end: 3 }),
+        frameRate: 10,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: 'turn',
+        frames: [ { key: 'mona', frame: 4 } ],
+        frameRate: 20
+    });
+
+    this.anims.create({
+        key: 'right',
+        frames: this.anims.generateFrameNumbers('mona', { start: 5, end: 8 }),
+        frameRate: 10,
+        repeat: -1
+    });
+
+    //  Input Events
+    cursors = this.input.keyboard.createCursorKeys();
+
+    //  Eggs
+    const xVal = Math.floor(Math.random() * 340) + 20
+    const randEgg = Math.floor(Math.random() * 5) + 1
+        if (randEgg === 1){
+            skey = 'egg_1';
+        }
+        if (randEgg === 2){
+            skey = 'egg_2';
+        }
+        if (randEgg === 3){
+            skey = 'egg_3';
+        }
+        if (randEgg === 4){
+            skey = 'egg_4';
+        }
+        if (randEgg === 5){
+            skey = 'egg_5';
+        }
+        if (randEgg === 6){
+            skey = 'bad_egg';
+        }
+    eggs = this.physics.add.group({
+        key: skey,
+        setXY: { x: xVal, y: 0, stepX: 70 }
+    });
+
+    badEggs = this.physics.add.group();
+
+
+    //  The score
+    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+
+    //  Collide the player and the egg with the platforms
+    this.physics.add.collider(player, platforms);
+    this.physics.add.collider(eggs, platforms, destroyEggs, null, this);
+    this.physics.add.collider(badEggs, platforms, destroyBadEggs, null, this);
+
+    //  Checks to see if the player overlaps with any of the egg, if he does call the collectEggs function
+    this.physics.add.overlap(player, eggs, collectEggs, null, this);
+
+    this.physics.add.overlap(player, badEggs, hitBadEgg, null, this);
+
+    timedEvent = this.time.addEvent({ delay: 1000, callbackScope: this, callback: eggDrop, /*repeat: 100000000000000000,*/ startAt: 0 });
+}
+
+function updateCounter() {
+
+    total++;
+
+}
+
+function update ()
+{
+    if (gameOver)
+    {
+        return;
+    }
+
+    if (cursors.left.isDown)
+    {
+        player.setVelocityX(-320);
+
+        player.anims.play('left', true);
+    }
+    else if (cursors.right.isDown)
+    {
+        player.setVelocityX(320);
+
+        player.anims.play('right', true);
+    }
+    else
+    {
+        player.setVelocityX(0);
+
+        player.anims.play('turn');
+    }
+
+    if (cursors.up.isDown && player.body.touching.down)
+    {
+        player.setVelocityY(-330);
+    }
+
+    if (lives === 0){
+        gOver(player, badEggs)
+    }
+
+    if (lives === 2){
+        life_3.setTint(0x220000);
+    }
+    if (lives === 1){
+        life_2.setTint(0x220000);
+    }
+    if (lives === 0){
+        life_1.setTint(0x220000);
+
+
+    player.setTint(0xff0000);
+
+    player.anims.play('turn');
+    let gameOverText = this.add.text(90, 320, 'GAME OVER', { fontSize: '32px', fill: '#fff' });
+
+
+    gameOver = true;
+    timedEvent.destroy();
+    this.physics.pause();
+    }
+
+}
+
+function eggDrop () {
+    const xVal = Math.floor(Math.random() * 340) + 5
+    const randEgg = Math.floor(Math.random() * 6) + 1
+
+    droppedEggs = droppedEggs +1
+    if (randEgg < 6){
+        if (randEgg === 1){
+            skey = 'egg_1';
+        }
+        if (randEgg === 2){
+            skey = 'egg_2';
+        }
+        if (randEgg === 3){
+            skey = 'egg_3';
+        }
+        if (randEgg === 4){
+            skey = 'egg_4';
+        }
+        if (randEgg === 5){
+            skey = 'egg_5';
+        }
+        if (randEgg === 6){
+            skey = 'bad_egg';
+        }
+        eggs = this.physics.add.group({
+            key: skey,
+            setXY: { x: xVal, y: 0, stepX: 70 }
+        });
+    }
+    else {
+        var badEgg = badEggs.create(xVal, 1, 'badEgg');
+    }
+
+    this.physics.add.collider(eggs, platforms, destroyEggs, null, this);
+    this.physics.add.overlap(player, eggs, collectEggs, null, this);
+    this.physics.add.overlap(player, badEggs, hitBadEgg, null, this);
+
+    newStart = (droppedEggs/(droppedEggs+25))*750
+
+    timedEvent = this.time.addEvent({ delay: 1000, callbackScope: this, callback: eggDrop, /*repeat: 100000000000000000,*/ startAt:  newStart});
+
+
+}
+
+function collectEggs (player, egg)
+{
+    egg.disableBody(true, true);
+
+    //  Add and update the score
+    score += 10;
+    scoreText.setText('Score: ' + score);
+}
+
+function destroyEggs (egg, collider)
+{
+    egg.disableBody(true, true);
+    lives = lives - 1;
+}
+
+function destroyBadEggs (egg, collider)
+{
+    egg.disableBody(true, true);
+}
+
+function hitBadEgg(player, badEgg){
+    badEgg.disableBody(true, true);
+    lives = lives - 1;
+}
+
+
+function gOver (player, badEgg)
+{
+    
+
+}
+
+</script>
+
+</body>
+</html>
