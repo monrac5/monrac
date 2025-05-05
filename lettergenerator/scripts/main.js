@@ -45,6 +45,13 @@ function signLetter() {
 }
 
 submitSig.addEventListener("click", signLetter);
+document.getElementById("signField").addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                // Check if Enter key is pressed
+                document.getElementById("submitS").click();
+                // Trigger button click
+            }
+        });
 
 // This is for date and place:
 function generateDate(obj) {
