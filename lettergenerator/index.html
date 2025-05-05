@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+  		<link rel="stylesheet" href="stylesheet.css">
+  		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Playwrite+DE+SAS:wght@100..400&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<img class="ornament" src="images/ornament.png">
+
+		<div class="buttoncontainer">
+			<button onclick="writeLetter()" class="button">Compose</button> 
+		</div>
+
+		<p class="header"></p>
+
+		<div class="letter">
+			<img class="stamp" src="">
+			<div class="paragraph">
+				<p class="date_place"></p>
+				<p class="salutation"></p>
+				<p class="inhalt"></p>
+				<p class="valediction"></p>
+				<p class="signatured"></p>
+			</div>
+
+		</div>
+
+		<div class="signature">
+			<input type="text" required id="signField" class="signField" placeholder="Sign letter">
+			<input type="submit" value="&#128395" class="submitSig">
+		</div>
+
+		<img class="flower" src="images/flower.png">
+
+		<p class=end>Read the original <a href="https://www.gutenberg.org/cache/epub/38235/pg38235-images.html">here</a>.<br>All letters are in the public domain.</p>
+		
+		<script src="scripts/main.js"></script>
+	</body>
+</html> 
