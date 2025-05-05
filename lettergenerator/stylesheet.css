@@ -1,0 +1,122 @@
+h1 {
+   text-align: center;
+}
+
+.button:hover {
+  background-color: antiquewhite;
+}
+
+.flower {
+   display: block;
+   margin: auto;
+   width: 10%;
+   padding-top: 50px;
+}
+
+.ornament {
+   display: block;
+   margin: auto;
+   max-width: 80%;
+}
+
+@media only screen and (max-width: 1150px) {
+  .ornament {
+      display: block;
+      margin: auto;
+      max-width: 100%;
+  }
+}
+
+.buttoncontainer {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-top: 15px;
+}
+
+.button {
+   border: 2px solid darkred;
+   background-color: white;
+   cursor: pointer;
+   font-size: 16px;
+   font-family: "Times New Roman", Times;
+   padding: 8px 22px;
+   border-radius: 50px;
+}
+
+.stamp {
+   float: right;
+   max-width: 150px;
+   max-height: 150px;
+   padding: 10px;
+   margin-bottom: 15px;
+   margin-left: 15px;
+}
+
+.header {
+   text-align: center;
+   font-weight: bold;
+   font-size: 20px;
+   font-family: "Times New Roman", Times;
+}
+
+.letter {
+   padding: 10px;
+   border: 4px solid;
+   border-color: darkgoldenrod;
+   border-style: dotted;
+   margin-bottom: 25px;
+   margin-left: 15%;
+   margin-right: 15%;
+   min-height: 180px;
+   background-color: antiquewhite;
+}
+
+.date_place {
+   font-family: "Playwrite DE SAS", cursive;
+   font-size: 14px;
+   text-align: right;
+}
+
+.paragraph {
+   margin: 20px;
+   font-family: "Times New Roman", Times;
+   font-size: 18px;
+}
+
+.signatured {
+   font-family: "Playwrite DE SAS", cursive;
+   font-size: 16px;
+}
+
+.signature {
+   text-align: center;
+   outline: none;
+}
+
+.submitSig {
+   cursor: pointer;
+   background-color: white;
+}
+
+input[type=submit] {
+   border: none;
+}
+
+input[type=text]:focus {
+   outline: none;
+   border-color: darkgoldenrod;
+}
+
+input[type=text] {
+   border-color: darkred;
+}
+
+.end {
+   font-size: 12px;
+   font-family: "Times New Roman", Times;
+   margin-top:60px;
+   text-align: center;
+}
+
+
