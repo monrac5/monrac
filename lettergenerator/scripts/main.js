@@ -1,6 +1,6 @@
 // Online:
 async function writeLetter() {
-  const requestURL = "../letters.json";
+  const requestURL = "https://www.monathierse.net/lettergenerator/letters.json";
   const request = new Request(requestURL);
 
   const response = await fetch(request);
