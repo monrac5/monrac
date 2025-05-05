@@ -1,6 +1,6 @@
 // Online:
 async function writeLetter() {
-  const requestURL = "https://github.com/monrac5/monrac5/blob/main/lettergenerator/letters.json";
+  const requestURL = "../letters.json";
   const request = new Request(requestURL);
 
   const response = await fetch(request);
